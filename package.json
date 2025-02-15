@@ -2,8 +2,8 @@
   "name": "@alexdevs/expo-fireblocks-config-plugin",
   "version": "1.0.2",
   "description": "Config plugin to setup @fireblocks/react-native-ncw-sdk on prebuild",
-  "main": "build/withFireblocksSDK.js",
-  "types": "build/withFireblocksSDK.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "repository": "https://github.com/alex-pominov/expo-fireblocks-config-plugin.git",
   "files": [
     "build",
