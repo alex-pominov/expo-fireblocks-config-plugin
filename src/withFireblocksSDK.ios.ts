@@ -1,20 +1,13 @@
 import fs from 'fs';
 import path from 'path';
-import { version } from '../package.json';
 import { ExpoConfig } from '@expo/config-types';
 import { ExportedConfigWithProps } from '@expo/config-plugins/build/Plugin.types';
-import {
-  ConfigPlugin,
-  XcodeProject,
-  createRunOncePlugin,
-  withDangerousMod,
-  withXcodeProject,
-} from '@expo/config-plugins';
+import { ConfigPlugin, XcodeProject, withDangerousMod, withXcodeProject } from '@expo/config-plugins';
 
-type FireblocksSDKConfig = {
+export type IosFireblocksSDKConfig = {
   productName: string;
   repositoryUrl: string;
-  version: string;
+  minimumVersion: string;
 };
 
 /**
@@ -45,7 +38,7 @@ function getFrameworksBuildPhaseUUID(xcodeProject: XcodeProject) {
   throw new Error('Unable to locate PBXFrameworksBuildPhase in the Xcode project.');
 }
 
-function withFireblocksDependency(config: ExpoConfig, fireblocksSDKConfig: FireblocksSDKConfig) {
+function withFireblocksDependency(config: ExpoConfig, fireblocksSDKConfig: IosFireblocksSDKConfig) {
   return withXcodeProject(config, async (config) => {
     const xcodeProject = config.modResults;
     const frameworksBuildPhaseUuid = getFrameworksBuildPhaseUUID(xcodeProject);
@@ -59,7 +52,7 @@ function withFireblocksDependency(config: ExpoConfig, fireblocksSDKConfig: Fireb
     addSwiftPackageReference(xcodeProject, {
       packageRefUuid,
       repositoryUrl: fireblocksSDKConfig.repositoryUrl,
-      version: fireblocksSDKConfig.version,
+      version: fireblocksSDKConfig.minimumVersion,
     });
 
     // 2. Add Package Product Dependency
@@ -210,10 +203,10 @@ function withPostInstall(config: ExpoConfig) {
   ]);
 }
 
-const withFireblocksSDK: ConfigPlugin<FireblocksSDKConfig> = (config, { productName, repositoryUrl, version }) => {
-  config = withFireblocksDependency(config, { productName, repositoryUrl, version });
+const withIosFireblocksSDK: ConfigPlugin<IosFireblocksSDKConfig> = (config, iosFireblocksSDKConfig) => {
+  config = withFireblocksDependency(config, iosFireblocksSDKConfig);
   config = withPostInstall(config);
   return config;
 };
 
-module.exports = createRunOncePlugin(withFireblocksSDK, 'withFireblocksSDK', version);
+export { withIosFireblocksSDK };

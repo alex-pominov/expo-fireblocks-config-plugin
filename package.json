@@ -20,6 +20,8 @@
   },
   "keywords": [
     "react-native",
+    "fireblocks",
+    "plugin",
     "expo"
   ],
   "jest": {

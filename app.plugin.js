@@ -1,1 +1,1 @@
-module.exports = require("./build/withFireblocksSDK");
+module.exports = require("./build");

@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.withIosFireblocksSDK = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const package_json_1 = require("../package.json");
 const config_plugins_1 = require("@expo/config-plugins");
 /**
  * Generate a random Xcode-style UUID (24 uppercase hex characters).
@@ -43,7 +43,7 @@ function withFireblocksDependency(config, fireblocksSDKConfig) {
         addSwiftPackageReference(xcodeProject, {
             packageRefUuid,
             repositoryUrl: fireblocksSDKConfig.repositoryUrl,
-            version: fireblocksSDKConfig.version,
+            version: fireblocksSDKConfig.minimumVersion,
         });
         // 2. Add Package Product Dependency
         addPackageProductDependency(xcodeProject, {
@@ -156,9 +156,9 @@ function withPostInstall(config) {
         },
     ]);
 }
-const withFireblocksSDK = (config, { productName, repositoryUrl, version }) => {
-    config = withFireblocksDependency(config, { productName, repositoryUrl, version });
+const withIosFireblocksSDK = (config, iosFireblocksSDKConfig) => {
+    config = withFireblocksDependency(config, iosFireblocksSDKConfig);
     config = withPostInstall(config);
     return config;
 };
-module.exports = (0, config_plugins_1.createRunOncePlugin)(withFireblocksSDK, 'withFireblocksSDK', package_json_1.version);
+exports.withIosFireblocksSDK = withIosFireblocksSDK;
